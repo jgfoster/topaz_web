@@ -1,0 +1,2787 @@
+!========================================================================
+! Copyright (C) VMware, Inc. 1986-2012.  All Rights Reserved.
+!
+! Name - topaz.hlp
+!
+! Description: 
+!  help file for the Topaz program.  This is not a VMS help file.  it
+!  is formatted to be processed by the helputil module.
+!
+!        ****> WARNING
+!        ****> Text lines in Help messages must be limited to 78 characters
+!        ****> The Help run-times add a 2 character space preceding each line
+!        ****> of text when the help message is output.
+!
+!        ****> Do Not use TAB characters.
+!
+! $Id: topaz.hlp 28349 2012-05-18 22:36:53Z stever $
+!
+!========================================================================
+
+  TOPAZ - a programmer's interface to the GemStone system 
+
+  For an overview of Topaz, see the "Overview" help topic.
+
+1 HELP
+     Displays help about the commands Topaz recognizes.
+     Enter ? at a help prompt for a list of topics available
+     at that level of the hierarchy.  Help topics can be
+     abbreviated to uniqueness.
+
+     Examples:
+        help edit last      displays help text for 'last'.
+        help fileout        displays help text for 'fileout'.
+
+     Press Return at a help prompt to go up a level in the
+     hierarchy until you exit the help facility.
+
+1 ABORT
+     Equivalent to    System abortTransaction 
+     Aborts the current GemStone transaction.
+
+     If your session is outside a transaction, use ABORT to obtain a new
+     view of the database.
+
+     Although you can abbreviate most other Topaz commands and
+     parameter names, ABORT must be typed in full.
+
+1 BEGIN
+     Equivalent to    System beginTransaction
+     Begins a GemStone transaction when your session is outside a
+     transaction.  For use with #manualBegin transaction mode.
+     (See GemStone Smalltalk class System). 
+
+     Although you can abbreviate most other Topaz commands and
+     parameter names, BEGIN must be typed in full.
+
+1 BREAK
+     Establishes (or displays) a method breakpoint within your 
+     GemStone Smalltalk code.  For more information about breakpoints,
+     see Chapter 2 of the Topaz manual.
+
+2 @NNN  
+    Example
+      BREAK @6
+
+    Set breakpoint at specified step point of the method selected
+    by previous DOWN, FRAME , LOOKUP, LIST, or UP command .
+
+
+2 METHOD
+     Establishes a method breakpoint in an instance method.
+     You may set method breakpoints before "step points": assignments, 
+     message sends, or method returns.  If you don't explicitly specify 
+     a step point, the breakpoint is established at step 1 of the method.
+
+        break method GsFile nextLine
+            Establishes a breakpoint at step point 1 of the
+            instance method "nextLine:" for class GsFile .
+
+        set class String
+        break method ^ < @ 2
+            Establishes a breakpoint at step point 2 of the
+            instance method "<" for the current class (String).
+
+        break method @nnnn nextLine
+            Establishes a breakpoint at step point 1 of the
+            instance method "nextLine:" for class with objectId nnnn
+
+        break method @nnnn
+	    Establishes a breakpoint at step point 1 of the
+	    GsNMethod with objectId nnnn 
+
+     See BREAK CLASSMETHOD for setting breakpoints on class methods.
+
+2 CLASSMETHOD 
+
+        break classmethod GsFile openRead: @ 2
+
+            Establishes a breakpoint at step point 2 of the
+            class method "openRead:" for class GsFile .
+
+     See BREAK METHOD for setting breakpoints on instance methods.
+
+3 Restrictions
+
+    Message breakpoints are not supported in GemStone 5.0 .
+
+    Other restrictions which existed in GemStone 4.1 no longer exist.
+
+3 Object_Specification_Formats
+
+    You may use any of the following formats to specify the className 
+    parameter in the BREAK METHOD command line:
+
+       @<integer>     an unsigned 64-bit decimal OOP value
+       text           the GemStone object with the specified name (either
+                      a Smalltalk variable name or a local variable created 
+                      with the DEFINE command)
+       **             the OOP of the result of the last execution
+       ^              the current class
+
+2 LIST
+     Lists all currently set method breakpoints.
+     For example:
+
+        break list
+
+        1  Method System class | performOnServer: @ 1
+        2  Message PipeStream | nextPut:
+        3  Method String | < @ 2      <DISABLED>
+
+2 DISABLE
+
+     Disables the breakpoint identified by the given index in the BREAK
+     DISPLAY listing. For example:
+
+        break list
+          1     Method Object | at: @ 1
+          2     Message PipeStream | nextPut:
+          3     Method System class | performOnServer: @ 3
+
+        break disable 2
+          Removing break message PipeStream | nextPut:
+
+3 ALL
+
+    Disables all method breakpoints that are currently set.
+
+2 ENABLE 
+
+     Reenables the breakpoint identified by the given index in the BREAK
+     DISPLAY listing. 
+
+3 ALL
+
+    Reenables all disabled method breakpoints.
+
+2 DELETE
+     Deletes the breakpoint identified by the given index in the BREAK
+     DISPLAY listing.  For example:
+
+        break list display
+          1     Method Object | at: @ 1
+          2     Message PipeStream | nextPut:
+          3     Method System class | performOnServer: @ 3
+
+        break delete 2
+
+        break list
+          1     Method Object | at: @ 1
+          2     Method System class | performOnServer: @ 3
+
+
+3 ALL
+     Deletes all currently set breakpoints.  For example:
+
+       break delete all
+
+1 C 
+    Equivalent to CONTINUE
+
+1 CATEGORY:
+     Sets the "current category" for subsequent method compilations.  
+     For example: 
+
+       Category: Accessing
+
+     To include spaces in a category name, enclose the category name
+     in single quotes:
+
+       cat 'Public Methods'
+
+     If you compile a method without first selecting a category, 
+     the new method is inserted in the default category "as yet unspecified".
+
+     If the category you name doesn't already exist, Topaz will create
+     it the first time you compile a method. 
+
+     Specifying a new class with SET CLASS clears the current category.
+     When you EDIT or FILEOUT a method, that method's category becomes
+     the current category. 
+
+     Before you can set CATEGORY, you must be logged in to GemStone.
+     The current category is cleared by the LOGOUT, LOGIN, SET CLASS,
+     and SET SESSION commands.  
+
+1 CLASSMETHOD:
+     Compiles a class method for the class whose name you give as a parameter.
+     The class of the new method will automatically become the current class.
+     If you don't supply a class name, the new method is compiled for the
+     current class (as set with the SET CLASS:, FILEOUT CLASS:, METHOD:, 
+     or LIST CATEGORIESIN: command).
+
+     Text of the method should follow the CLASSMETHOD: command on subsequent
+     lines.  The method text is terminated by the first line that starts 
+     with the '%' character.  For example:
+
+           CLASSMETHOD: Animal
+           returnAString
+              ^ String new
+           %
+
+1 COMMIT
+     Equivalent to    System commitTransaction 
+     Commits the current GemStone transaction.
+     Although you can abbreviate most other Topaz commands and
+     parameter names, COMMIT must be typed in full.
+
+1 CONTINUE
+     Attempts to continue GemStone Smalltalk execution on the current call stack
+     after encountering a breakpoint, a "pause" message,
+     or a user-defined error.
+
+     CONTINUE 
+       with no arguments will attempt to continue execution using GciContinue().
+
+     CONTINUE anObjectSpecification
+       will attempt to continue execution using GciContinueWith.  The
+       object specified by anObjectSpecification will be used as the
+       replaceTopOfStack argument to GciContinueWith.
+
+     For more information about breakpoints, see the Help information
+     for the BREAK command.
+
+     For information about Object's "pause" method, see the protocol for
+     Object in the "GemStone Kernel Reference".
+
+     For information about user-defined errors, see the chapter entitled
+     "Handling Errors" in the "GemStone Programming Guide".
+
+     See also Object_Specification_Formats
+
+
+1 DEFINE
+     Defines local variables for use in SEND, OBJECT, and other commands.  
+
+     DEFINE aVar anObjSpec aSelectorOrArg ...
+       sends a message to the object "anObjSpec", and saves the result 
+       as a local variable with the name "aVar".  For example: 
+
+          DEFINE UserProfile System myUserProfile
+
+     DEFINE aVar    deletes the definition of the variable "aVar".
+
+     DEFINE         lists all current local variable definitions.
+
+     If you abort your transaction, or if you switch sessions with SET 
+     SESSION, your local variables may no longer have valid definitions.
+
+     The variable name "aVar" must begin with a letter (a...z) or an
+     underscore, can be up to 255 characters in length, and cannot contain
+     white space.
+
+     See also Object_Specification_Formats
+
+2 Examples 
+      DEFINE var1 **      saves the last result in local variable "var1".
+
+      DEFINE var2 var1 entryAt: 4
+        sends "entryAt:" to the object named "var1" (in this case
+        a local variable defined on the previous line) and saves the
+        result in the local variable "var2".
+      
+      DEFINE var3 1.444 * 47e32
+        sends "*" to the float object "1.444" with arg "47e32" 
+        and saves the result in the local variable "var3".
+      
+      DEFINE              displays all current local variable definitions.
+      
+      DEFINE var3         removes the definition of "var3".
+
+1 DISPLAY
+     The DISPLAY and OMIT commands control the display of instance variable 
+     names, hexadecimal byte values, and OOPs (object-oriented pointers).
+     The DISPLAY command turns on these display attributes, and the OMIT 
+     command turns them off.  
+
+2 BYTES
+     After you issue the DISPLAY BYTES command, the display for each string 
+     object will include the hexadecimal value of each byte.
+
+2 CLASSOOPS 
+
+     If  DISPLAY OOPS is set,  then DISPLAY CLASSOOPS will enable oops of classes 
+     to be printed in object display in addition to class names.  
+     Also causes oops of methods to be printed by stack display and 
+     method lookup commands, and enables printing of evaluation temps in 
+     stack frame printouts from FRAME command.
+
+     The DISPLAY OOPS command will set  DISPLAY CLASSOOPS by default.
+
+2 LINEEDITOR
+     enables use of the built-in line editor . Not available on Windows .
+     The built-in line editor is enabled by default on Unix.
+
+2 NAMES
+     For each of an object's named instance variables, displays the instance 
+     variable name along with its value.  (This is the default condition.)  
+     To turn off this display, use the OMIT NAMES command.
+     
+     When instance variable name display is off, named instance
+     variables appear as 'i1', 'i2', 'i3', etc.
+
+2 OOPS
+     After you issue the DISPLAY OOPS command, OOP values will be displayed
+     with database results.  For each object, a header is displayed containing
+     the object's OOP (a 64-bit unsigned integer), the object's size (the sum of
+     its named, indexable, and anonymous instance variable fields), and the
+     OOP of the object's class.
+
+2 PUSHONLY
+     Enables the effect of the 'ONLY' keyword in an OUTPUT PUSH command.
+     Default state is DISPLAY PUSHONLY.
+
+2 ZEROBASED
+     Show offsets of instVars zero-based instead of the default one-based
+     when displaying objects.
+
+2 RESULTCHECK
+
+     The topaz command DISPLAY RESULTCHECK will cause a file
+     ./topazerrors.log to be created.  If the file already exists, it
+     will be opened for append.
+
+     When DISPLAY RESULTCHECK has been specified,
+       a) The default behavior of all "run" commands will be equivalent to
+            expectvalue true
+            run
+            %
+
+       b) Every time ErrorCount is incremented, a log record will be
+       appended to  topazerrors.log , giving a summary of the error, and
+       the line number in the topaz output file, if possible.  If the
+       only output file open is stdout, then line numbers are not available.
+   
+     The OMIT RESULTCHECK command will close the file  topazerrors.log.
+     If OMIT RESULTCHECK has been specified, then only an explicit 
+     EXPECTVALUE or EXPECTBUG command will cause non-error results of 
+     a run command to be checked.
+
+2 ERRORCHECK
+
+    Same as RESULTCHECK, except that there is no implied
+      expectvalue true 
+    prior to "run" or "doit" commands.
+
+
+2 PAUSEONERROR,
+ 
+     DISPLAY PAUSEONERROR causes the following behavior:
+
+     When an error occurs, and if the topaz stdin is from a terminal, 
+     then write a message "Pausing after error ..."
+     to stdout, and wait for an end of line on stdin before continuing
+     topaz execution.  A ctl-C on stdin will terminate the pause and 
+     terminate further processing of input files.
+
+     If DISPLAY RESULTCHECK is also active, then 
+       "When an error occurs"
+     is interpreted as
+       "When a result or error is contrary to the
+        current RESULTCHECK, EXPECTVALUE, and EXPECTERROR settings"
+
+     Use OMIT PAUSEONERROR to cancel this pause-on-error mode.
+
+2 FLUSHOUTPUT
+
+     Enables immediate flushing of topaz output files other than stdout.
+     DISPLAY FLUSHOUTPUT causes an fflush() call to be made to each active
+     topaz log file (files specified by OUTPUT PUSH) other than stdout,
+     after each line of topaz output is written.  This allows a
+     tail -f  to have a more up-to-date view of a topaz output file.
+     The default is equivalent to OMIT FLUSHOUTPUT.
+
+1 DISASSEM
+
+     Disassemble the specified GsMethod.
+     Intended for use in a linked  (topaz -l) session only.
+     In a remote (topaz -r) session output goes to the gem log file.
+
+     DISASSEM with no arguments will disassemble the currently selected
+     stack frame, as selected by a previous UP, DOWN, or FRAME command .
+
+       DISASSEM @<integer>   
+         Disassemble the method or code object with specified oop.
+
+       DISASSEM METHOD: <selectorSpec>
+         Disassemble the specified instance method for the class previously
+         set by the SET CLASS command.
+
+       DISASSEM CLASSMETHOD: <selectorSpec>
+         Disassemble the specified class method for the class previously
+         set by the SET CLASS command.
+     
+     See <selectorSpec> in Object_Specification_Formats
+
+1 DOIT
+
+     Sends the text following the DOIT command to GemStone for execution
+     and displays the result.
+     (If there is an error in your code, Topaz will display an error message
+     instead of a legitimate result.)  Smalltalk text is terminated by 
+     the first line that contains a '%' character in column 1.  For example:
+
+     doit
+     2 + 1
+     %
+     3
+
+  The result is displayed as if LEVEL 0 were the last LEVEL command,
+  but without altering the display level used by other commands.
+
+  If GEM_NATIVE_CODE_ENABLED=FALSE in the gem config file, or if
+  any breakpoints are set, execution defaults to interpreted mode,
+  otherwise execution defaults to using native code .
+
+1 DOWN [<anInteger>]
+
+    DOWN -- In the current stack, change the current frame
+    to be the callee of the current frame, and display the 
+    frame thus selected.  
+
+    DOWN <anInteger> -- Go down anInteger frames and display
+    the frame thus selected.  
+
+1 DOWNR [<anInteger>]
+    Like DOWN, but looks at  Ruby frames only
+
+    DOWNR -- Go down stack to next non-bridge frame in environment 1, and display
+    the frame thus selected.  
+
+    DOWNR <anInteger> -- Go down stack counting only non-bridge frames 
+    in environment 1, skipping other frames, and display the frame thus selected.
+
+1 DOWNRB [<anInteger>]
+
+    same as DOWNR, but counts/displays both bridge and non-bridge methods. 
+
+1 EDIT
+     Allows you to edit GemStone Smalltalk source code.  You can create or 
+     modify methods or blocks of code to be executed.  You can also edit the 
+     text of the last PRINTIT, DOIT, METHOD:, or CLASSMETHOD: command.
+
+     Before you can use this command, you must first establish
+     the name of the host operating system editor you wish to use.
+     You can do this interactively or in your Topaz initialization
+     file with the Topaz SET EDITORNAME command.  Method text is stored in 
+     a temporary file while you are editing.
+
+     Do not use the EDIT command for batch processing.  
+     Use the METHOD: and CLASSMETHOD: commands to create methods, and the
+     PRINTIT or DOIT commands for executing blocks of code in batch processes.
+
+
+     EDIT has several subcommands.  If you supply any other parameter 
+     to EDIT, Topaz will assume that you are naming an existing instance 
+     method that you wish to edit.  For example: 
+     
+         topaz> Set class Integer
+         topaz> edit +
+     
+     will edit the method whose selector is + in class Integer.
+
+     As shown here, before you edit an existing method, you must use 
+     SET CLASS: to select the method's class.  (The category of the method
+     you edit will be automatically selected as the current category.)
+     
+2 LAST
+     Tells Topaz that you want to edit the text of the last PRINTIT, DOIT,
+     METHOD:, or CLASSMETHOD: command.  You can inspect that text before 
+     you edit by issuing the Topaz command OBJECT LastText.
+         
+     When you exit the editor, Topaz will ask whether to compile and 
+     execute the altered code.  If you tell Topaz to execute the code, 
+     it will effectively reissue your RUN command with the new text. 
+
+2 NEW
+     Tells Topaz that you want to create either a new method or a chunk
+     of GemStone Smalltalk code for execution.  Before you can create new 
+     methods, you must first use SET CLASS to select a current class.  If you
+     haven't yet selected a current category, the new method is inserted in
+     the default category "(as yet unspecified)".
+
+     Any of the following subcommands are valid.  If you simply type 
+     EDIT NEW (with no additional keywords), Topaz will assume that you 
+     want to create a new instance method for the current class.
+    
+3 METHOD
+     Allows you to create a new instance method for
+     the selected class and category.
+        
+3 CLASSMETHOD
+     Allows you to create a new class method for the
+     selected class and category.
+
+3 TEXT
+     Allows you to create a new chunk of GemStone Smalltalk code for
+     compilation and execution.  
+
+2 CLASSMETHOD:
+     Allows you to edit the source code of an existing class method.  The 
+     selector of the method is a <selectorSpec> parameter.  For example: 
+         
+            topaz> Set class OfsDirectory
+            topaz> Edit class new
+
+     Before you can use this command, you must first use SET CLASS
+     to select the "current" class.  The category of the method you edit
+     will automatically be selected as the current category.
+     See <selectorSpec> in Object_Specification_Formats
+
+2 METHOD:
+     Allows you to edit the source code of an existing instance method.  
+     The selector of the method is a <selectorSpec> parameter.
+
+     Before you can use this command, you must first use SET CLASS
+     to select a "current" class.  The category of the method you edit
+     will automatically be selected as the "current" category.
+     See <selectorSpec> in Object_Specification_Formats
+
+1 ERRORCOUNT
+
+     Displays the topaz ErrorCount variable.
+
+     Equivalent to  
+        OBJECT ErrorCount
+     except that ERRORCOUNT does not require a valid session.  
+
+     The C function TpAuxIncErr() is called each time ErrorCount
+     is incremented;  set a C debugger breakpoint in TpAuxIncErr()
+     if you want to stop an any error other than those expected via
+     EXPECTERROR .
+
+1 EXIT [<status>]
+     Terminates Topaz, returning to the parent process or operating system.
+     If you are still logged in to GemStone when you type EXIT, this will   
+     abort your transaction and log out all active sessions.  
+     Although you can abbreviate most other Topaz commands and
+     parameter names, EXIT must be typed in full.
+
+     If this command has a <status> argument and it is an integer, then
+     the integer is used as the exitStatus.  If the status argument is an 
+     object specification that resolves to an integer, then that value 
+     is used as the exitStatus.  Only 8 bits of the integer are returned,
+     exitStatus should be 0..255.  If it is not an integer then an error 
+     is returned and the process does not exit.
+
+     If the command does not have a <status> argument, the exitStatus will 
+     be either 1 if there were GCI errors or the topaz errorcount is not zero, 
+     or 0 if no errors had occurred.
+ 
+     EXIT has the same function as QUIT.
+
+1 EXITIFNOERROR
+
+   if ERRORCOUNT would return 0 , same as EXIT 0
+   else has no effect.
+
+1 EXPECTBUG
+
+  expectbug <bugNumber> [ value <resultSpec> [ <integer> ] |
+                          error <errCategory> <errNumCls> [ <resultSpec> [ <resultSpec>]..] ]
+       Specifies that the result of the following execution results
+       in the specified answer (either a value or an error) and that
+       it is a known bug.  <bugNumber> is the bug number assigned to
+       this bug.  A result value is specified as in the expectvalue
+       command and a result error is specified as in the expecterror
+       command.
+
+       The topaz variable ErrorCount is incremented.
+
+  This command is normally used immediately prior to commands
+     printit, doit,  method, classmethod, commit, send
+
+  See also   Object_Specification_Formats
+             EXPECTVALUE
+             EXPECTERROR
+
+1 EXPECTERROR
+
+ expecterror <errCategory> <errNumCls> [ <resultSpec> [ <resultSpec>]..]
+     This command specifies that the result of the following compilation
+     or execution must be the specified error.
+
+      <errCategory> must be a legal topaz object specification which
+         evaluates to  the object identifier of an error category.
+
+      <errNumCls> must be a legal topaz object specification
+         which evaluates to a SmallInteger , or to a subclass of AbstractException
+
+      <resultSpec> specify the required error arguments using the same
+      rules as described for <resultSpec> under "expectvalue" command
+
+     If the result of the compilation or execution is not the expected
+     error, the topaz variable ErrorCount will be incremented.
+
+  Limitations of  expecterror:
+     There is no checkint for argument values for fatal errors.
+
+     Checking for number of arguments is limited.  If you care about the
+     number of arguments, then you should give that many <resultSpec> tokens
+     in the expecterror command.  If you don't care at all about the class
+     of the arguments then specify "%Object"  for each argument.
+     ErrorCount will be incremented if the actual error contains fewer
+     arguments than were specified in the "expecterror" command.
+     ErrorCount will NOT be incremented if the actual error contains more
+     arguments than were specified in the "expecterror" command.
+
+  This command is only meaningful immediately prior to commands
+     printit, doit,  method, classmethod, commit, send
+
+  Up to 5 "expecterror" or "expectvalue" commands may precede an execution 
+  command. If the result of execution satisfies any one of them, the ErrorCount 
+  variable will not be incremented.
+
+  See also   Object_Specification_Formats
+
+1 EXPECTVALUE
+
+  expectvalue <resultSpec> [ <integer> ]
+       If <resultSpec> is <objInstanceOfSpec> then the result of the following
+       execution must be an instance of <objInstanceOfSpec>.
+       If <resultSpec> is <literalObjectSpec> then the result of the
+       following execution must be = <literalObjectSpec>. This
+       = test is done by using GciPerform to send #=  to the result.
+       Otherwise, the result of the following execution
+       must be == <resultSpec>.
+
+       <integer>,  if present specifies the required result of sending
+       the method #size to the object satisfying <objDesc>
+
+       If the result does not satisfy the expected result, the topaz
+       variable ErrorCount is incremented.
+
+  This command is normally used immediately prior to commands
+     printit, doit,  method, classmethod, commit, send
+
+  The command
+     commit
+  has an internal result of  true  for success and  false  for failure.
+
+  The command
+     set session
+  has an internal result of  true  for success, and the error encountered
+  for failures.
+
+  The command
+     object
+  has an internal result of true unless immediately preceded by explicit
+  expectvalue or expecterror commands, in which case the internal result
+  is the object displayed or the error encountered.
+  
+  All other topaz commands will have an internal result of  true  for 
+  success or @0 for failure
+
+  Up to 5 "expecterror" or "expectvalue" commands may precede an execution 
+  command. If the result of execution satisfies any one of them, the ErrorCount 
+  variable will not be incremented.
+
+  See also   Object_Specification_Formats
+
+1 FILEOUT
+     Writes class definitions and/or methods to a named file in a format 
+     that can be fed back into Topaz with the INPUT command.  
+     If you supply a parameter that does not match one of the FILEOUT 
+     sub-commands, Topaz will assume it is a method selector for the 
+     selected class and will attempt to file it out.
+
+2 TOFILE:
+     The output of the FILEOUT command is sent to the file that you name
+     following the TOFILE: keyword.  For example:
+
+        fileout class: Object tofile: object.opl
+     
+     If you specify a host environment name such as $HOME/foo.bar in UNIX
+     as the output file, Topaz will expand that name to the full filename.  
+
+     If the output file does not contain an explicit path specification, Topaz
+     writes to the named file in the directory in which you started Topaz.
+
+     If the filename begins with '&' , the '&' is discarded and output
+     is appended to the specified file, otherwise the specified file
+     is overwritten.
+
+2 CLASS:
+     Writes out the class definition and all the method categories
+     and their methods.  The class that you file out will be selected
+     as the current class for use with other Topaz commands.
+
+     To write out the definition of the current class, type:
+
+        fileout class: ^
+
+2 CATEGORY:
+     Writes out all the methods contained in the named category
+     for the current class.
+
+2 CLASSCATEGORY:
+     Writes out all the class methods contained in the named category
+     for the current class.
+
+2 CLASSMETHOD:
+     Writes out the specified class method (as defined for the current 
+     class).  The category of that method is automatically selected 
+     as the current category for use with other Topaz commands.
+
+2 METHOD:
+     Writes out the specified method (as defined for the current class).
+     The category of that method is automatically selected as the current
+     category for use with other Topaz commands.
+
+     You may omit the "METHOD:" keyword if the method selector does not 
+     conflict with any of FILEOUT's subcommands.  For example, to file 
+     out a method named "category:", you'd need to explicitly include the
+     METHOD: keyword as shown here:
+
+        fileout method: category: 
+
+1 FRAME [<anInteger>]
+
+    FRAME  displays current frame of current stack, with temps
+
+    FRAME  <anInteger> goto specified frame in current stack,
+    and make the specified frame the current frame and 
+    display that frame with temps.  Similar to "STACK SCOPE <anInteger>".
+
+1 FR_CLS [<anInteger>]
+
+    like FRAME, but turns on DISPLAY CLASSOOPS for display of 
+    the specified stack frames
+
+1 GCITRACE
+
+     GCITRACE 'filename'
+
+     Turns GCI tracing on. If filename is '' then turns it off.
+     If it is already off then '' turns it on to stdout.
+
+1 HIERARCHY
+
+      HIERARCHY [ envIdInteger ]
+        prints the class hierarchy up to Object for the current class,
+        and specified environment.  default environment == 0
+
+      HIERARCHY <className> [ envIdInteger ]
+        prints the class hierarchy up to Object for the specified class.
+        default environment == 0
+
+      The result is obtained from  Class>>hierarchy .
+      Ruby virtual classes are not shown in the report.
+
+1 HISTORY
+      HISTORY [ anInteger ]
+
+      Print the last <anInteger> entries in the topaz line editor
+      history.  Has no effect if the line editor is not enabled.
+      See also DISPLAY LINEEDITOR, OMIT LINEEDITOR .
+      Not available on Windows .
+
+1 IFERR
+
+     There are 10 post-error command buffers accessible by the IFERR command.
+
+     IFERR N <remainder of line>
+       The remainder of the command line following the integer N token
+       is saved as an unparsed command line in the specified
+       post-error buffer.
+
+     IFERR N 
+       If integer N is the last token on the line clears the specified 
+       post-error buffer.
+
+     Whenever an error occurs (other than one matching an "expecterror" 
+     command and other than one during parsing of the IFERR command), 
+     or, whenever a result fails to match an "expectvalue" command,
+     or, whenever a result matches an "expectbug" command, any non-empty
+     post-error buffers are executed.  Execution starts with
+     buffer 1, and proceeds to buffer 10, executing each non-empty
+     post-error buffer in order.
+     
+     If an error occurs while executing one of post-error buffers,
+     execution proceeds to the next non-empty post-error buffer.
+     Error and result checking implied by DISPLAY RESULTCHECK,
+     DISPLAY ERRORCHECK, EXPECTVALUE, etc,  are not performed while
+     executing from post-error buffers.
+     
+     If a post-error buffer contains a command that would terminate
+     the topaz process,  such as
+         iferr 3 exit
+     Then buffers 4..10 will have no effect.
+   
+     If a post-error buffer contains a command that would terminate
+     the session, such as
+        iferr 2 logout
+     then execution of buffers 3..10 will be attempted but they
+     will not have a session (unless buffer 3 contains "login").
+
+     One of the most useful forms of this command is
+        iferr 1 stk 
+        iferr 2 stack
+
+     See also  IFERR_LIST, IFERR_CLEAR .
+
+1 IFERR_LIST
+
+    Prints all of the non-empty post-error command buffers.
+    See also IFERR .
+
+1 IFERR_CLEAR
+
+    Clears all of the post-error command buffers.
+
+1 IFERROR
+
+     IFERROR <remander of line>
+       Equivalent to IFERR 1 <remainder of line> ,
+       saves remainder of line> in post-error buffer 1 .
+
+     IFERROR
+       with no non-blank characters after IFERROR ,
+       Equivalent to IFERR 1 , clears post-error buffer 1 .
+
+     See help for IFERR for more information
+
+
+1 IMPLEMENTORS <selectorSpec>
+   
+    Expects one argument, an selectorSpec, the value of which
+    is either a String or Symbol . 
+
+    Equivalent to a DOIT of
+      ClassOrganizer new implementorsOfReport: aString 
+    which reports implementors of (aString asSymbol) for environment 0.
+    May require larger than default GEM_TEMPOBJ_CACHE_SIZE configuration.
+    See <selectorSpec> in Object_Specification_Formats
+
+1 INPUT
+     Controls the source from which Topaz reads input.  Normally Topaz 
+     reads input from standard input (stdin).  This command will cause
+     Topaz to take its input from a file or device of your choice.
+
+2 fileName
+     Reads input from the named file.  (The current input file is pushed
+     onto a stack.)  There is a limit of 20 nested INPUTs.  When that limit 
+     is exceeded, an error will be displayed, and execution will
+     proceed in the current file.
+
+     If the fileName includes a host environment name, it is expanded to
+     the full filename before the INPUT command is carried out.
+
+     If you don't provide an explicit path specification, Topaz looks for
+     the named input file in the directory in which you started Topaz.
+
+2 POP
+     Pops the current input file from the stack of input files and
+     resumes reading from the previous file.  If there is no previous
+     file, or the previous file cannot be reopened, Topaz will once 
+     again take its input from stdin. 
+
+1 LEVEL
+     Sets the Topaz display level; that is, this command tells Topaz how 
+     much information to include in the result display.  A level of 1 
+     means that the first level of instance variables within
+     a result object will be displayed.  Similarly, a level of 2 means
+     that Topaz will display the variables within each of those variables.  
+     Setting the level to 0 (the default) will inhibit the display of 
+     objects.  (However, object headers will still be displayed if you 
+     specify DISPLAY OOPS.)  
+     The maximum display level is 32767, default is 0 .
+     Attempting to set the level to less than 0 generates an error.
+
+1 LIMIT
+     Tells Topaz how much of any individual object to display.
+
+     For example, a limit of 80 tells Topaz to display no more than 80 bytes
+     (or OOPs) of any object.  The default limit of 0 tells Topaz not to 
+     limit the size of output.  
+
+       limit oops 100
+           Tells Topaz to display no more than 100 OOPs of any pointer or 
+           NSC object.
+
+       limit bytes 40
+           Tells Topaz to display no more than 40 bytes of any byte object 
+           (instance of String or one of String's subclasses).
+
+     If 'limit bytes' value is non-zero, then when displaying frame temporaries,
+     or displaying an object with LEVEL > 0 , an instance variable having
+     a byte object as a value will have that byte object output limited to one line
+     (about 80 characters) of output.  display of just that byte  object
+     with the OBJ command will show full contents up to the 'limit bytes' value.
+     For debugging source code a suggested setting is 'limit bytes 5000' . 
+
+1 LIST
+     This command is used in conjunction with the SET and EDIT commands
+     to browse through dictionaries, classes, and methods in the database.
+
+     The LIST command is also useful in debugging your Smalltalk code.  
+     LIST with no arguments will list the source code for the currently selected
+     stack frame, as selected by a previous UP, DOWN, or FRAME command.
+     See also LISTW.
+
+2 @NNN
+   list source code of the GsNMethod or ExecBlock with specified objectId .
+   That method, or that blocks's home method becomes the default method
+   for subsequent LIST or DISASSEM commands.
+
+2 DICTIONARIES
+     Lists the SymbolDictionaries in your GemStone symbol list.  This command
+     executes the GemStone Smalltalk expression
+        GsSession currentSession symbolList namesReport
+
+2 CLASSES
+     Lists all of the dictionaries in your symbol list and all of the classes
+     they contain.
+
+2 CLASSESIN:
+     Lists the classes in a specific dictionary.  For example: 
+
+       list classesin: UserGlobals
+     
+     If no dictionary name is given, all of the dictionaries in your
+     symbol list are listed along with the classes they contain.
+
+2 CATEGORIESIN:
+     Lists all of the instance and class method selectors for the named
+     class, by category.  If you do not specify a class name, the categories
+     of the current class will be listed.  If you do specify a class name, 
+     that class becomes the current class for subsequent Topaz commands.
+     (The current class is also set with the SET CLASS:, FILEOUT CLASS:, 
+     or METHOD: command.)
+
+2 CCATEGORIES:
+     Lists all of the class method selectors for the named 
+     class, by category.  If you do not specify a class name, the categories
+     of the current class will be listed.  If you do specify a class name,
+     that class becomes the current class for subsequent Topaz commands.
+
+2 CLASSMETHOD:
+     With an argument of the form @NNN , lists the category and source of
+     the method with specified objectId . 
+   
+     With an argument that is a <selectorSpec> , 
+     lists the category and source of the given classmethod selector for
+     the current class.  (The current class is set with the SET CLASS:, 
+     FILEOUT CLASS:, METHOD:, or LIST CATEGORIESIN: command) .
+     See <selectorSpec> in Object_Specification_Formats
+
+2 CMETHOD:
+     LIST CMETHOD: is equivalent to LIST CLASSMETHOD:
+
+2 CSELECTORS
+     List selectors of all class methods, may be abbreviated as CSEL
+
+2 ICATEGORIES:
+     Lists all of the instance method selectors for the named
+     class, by category.  If you do not specify a class name, the categories
+     of the current class will be listed.  If you do specify a class name,
+     that class becomes the current class for subsequent Topaz commands.
+
+2 IMETHOD:
+     LIST IMETHOD: is equivalent to LIST METHOD:
+
+2 METHOD: 
+     With an argument of the form @NNN , lists the category and source of
+     the method with specified objectId .
+ 
+     With an argument that is a selector ,
+     lists the category and source of the given instance method selector for
+     the current class.  (The current class is set with the SET CLASS:, 
+     FILEOUT CLASS:, METHOD:, or LIST CATEGORIESIN: command.)
+
+     Example 1
+
+       topaz 1> where
+       ...
+       2 Object >> doesNotUnderstand: (envId 0) @6 line 14   [GsMethod 1714433]
+       ...
+       topaz 1> list method @1714433
+
+     Example 2
+       set class Object
+       list method doesNotUnderstand:
+
+2 SELECTORS
+     List selectors of all instance methods, may be abbreviated as SEL
+
+2 STEP
+     Lists the source code of the current frame within
+     the current stack and displays just the step point corresponding to
+     the step point of the selected frame .
+
+     (See STACK SCOPE to select a frame within a stack).
+
+2 STEPS
+     Lists the source code of the current frame within
+     the current stack and displays all step points in that source code.
+
+     (See STACK SCOPE to select a frame within a stack).
+
+2 STEPIPS
+     Lists the source code of the current frame within
+     the current stack and displays IPs of all step points in that source code.
+
+     (See STACK SCOPE to select a frame within a stack).
+3 METHOD:
+     Lists the source code of the specified instance method for the current
+     class, and displays all step points (allowable breakpoints) in that
+     method.  The token after METHOD: is a <selectorSpec> .
+     For example:
+
+         list steps method: habitat
+
+     You can use the BREAK METHOD command to set method breakpoints 
+     at any step point.
+     See <selectorSpec> in Object_Specification_Formats
+
+3 CLASSMETHOD:
+     Lists the source code of the specified class method for the current
+     class, and displays all step points (allowable breakpoints) in that
+     method.  The token after CLASSMETHOD: is a <selectorSpec> .
+
+     You can use the BREAK METHOD command to set method breakpoints 
+     at any step point.
+     See <selectorSpec> in Object_Specification_Formats
+
+2 BREAKS 
+     Lists the source code of the current frame,
+     and displays step points for method breakpoints currently set in 
+     that method.  Disabled breakpoints are displayed with their respective
+     step point number negated.
+
+     You can use the BREAK LIST command to list all currently set
+     breakpoints.  For more information about using breakpoints,
+     see the Help information for BREAK, or the discussion of debugging
+     in Chapter 2 of the Topaz manual.
+
+3 METHOD:
+     Lists the source code of the specified instance method for the current
+     class, and displays the method breakpoints currently set in that method.
+     The token after METHOD: is a <selectorSpec> .
+     See <selectorSpec> in Object_Specification_Formats
+
+3 CLASSMETHOD:
+     Lists the source code of the specified class method for the current
+     class, and displays the method breakpoints currently set in that method.
+     The token after CLASSMETHOD: is a <selectorSpec> .
+     See <selectorSpec> in Object_Specification_Formats
+
+1 L
+    Allowed as abbreviation for LISTW, if topaz has a valid session.
+
+1 LISTW
+
+    For the method implied by the current stack frame
+    list a maximum of WindowSize lines centered around current IP for the frame.
+    WindowSize is set by SET LISTWINDOW .
+    If topaz has a valid session, then LISTW is abbreviatable as L .
+
+1 LOADUA
+
+     LOADUA filename
+
+     Loads the application user action library specified by 'filename'.
+     Must be used before LOGIN.
+
+1 LOGIN
+     Lets you log in to a GemStone database.  Before you issue the LOGIN
+     command, you'll need to use the SET command -- either interactively or 
+     in your Topaz initialization file -- to establish certain required login 
+     parameters.  The required parameters for network communications are:
+                
+        SET HOSTUSERNAME:   Your user account on the host computer
+        SET HOSTPASSWORD:   Your password on the host computer
+        SET GEMNETID:       Name of the GemStone service on the host computer
+                               (defaults to gemnetobject)
+        SET GEMSTONE:       Name of the Stone (database monitor) process
+        SET USERNAME:       Your GemStone user ID 
+     
+     (For a linked session, only the last two values are required.)
+     For more information about these parameters, see the Help information
+     on SET.  Also, see Chapter 1 of the Topaz manual.
+
+     After you issue the LOGIN command, Topaz will prompt you for your 
+     GemStone password.  (Your response will not be echoed.) Alternatively,
+     you can use the SET PASSWORD: command to establish your GemStone
+     password before you log in.
+                
+     Topaz allows you to run your Gem, Stone, and Topaz processes on separate 
+     network nodes.  For more information about this, see the Help information
+     for SET GEMNETID and SET GEMSTONE.
+
+     If you're using linked Topaz, note the following:
+
+      o  Topaz can only be linked with a single GemStone session
+         process. If you issue the login command to create multiple
+         sessions, the new sessions are RPC rather than linked.
+
+      o  If the gemnetid is set to anything other than '' (null) or
+         gcilinkobj, Topaz starts an RPC session instead of a linked one.
+
+      o  You cannot use the SET command to run Gem and Topaz on separate
+         nodes.  (However, you may still run the Stone process on a separate
+         node.)
+
+1 LOGOUT
+     Logs out the current GemStone session.  This command aborts 
+     your current transaction.  Your local variables 
+     (created with the DEFINE command) no longer have
+     valid definitions when you log in again.
+
+     Although you can abbreviate most other Topaz commands and
+     parameter names, LOGOUT must be typed in full.
+
+     In scripts, to expect an error at logout , such as session already
+     invalid, use  EXPECTVALUE @1 . To expect a successful logout,
+     use  EXPECTVALUE true .
+
+1 LOGOUTIFLOGGEDIN
+    If logged in, logs out the current GemStone session.
+    Does not increment topaz error count if there is no current session.
+ 
+1 LOOKUP
+   LOOKUP meth <selectorSpec> [envIdInteger]
+   LOOKUP method <selectorSpec> [envIdInteger]
+   LOOKUP cmeth <selectorSpec> [envIdInteger]
+   LOOKUP classmethod <selectorSpec> [envIdInteger]
+
+     The first argument after 'LOOKUP' is case sensitive. 
+     Using the current class , search for specified instance or class method
+     method going up the class hierarchy.  Print the class in which 
+     method found, and list the category and source code .
+     Looks in transient method dicts, then peristent method dicts for each class
+     up the hierarchy.  The default envIdInteger == 0 .
+     See <selectorSpec> in Object_Specification_Formats
+
+   LOOKUP <classname> >> <selectorSpec> [envIdInteger]
+
+     Make the specified class the current class,
+     and do a lookup for the specified instance method
+     A <classname> may not be one of 'meth', 'method', 'cmeth', 'classmethod'
+
+   LOOKUP <classname> class >> <selectorSpec> [envIdInteger]
+
+     Make the specified class the current class,
+     and do a lookup for the specified class method.
+     A <classname> may not be one of 'meth', 'method', 'cmeth', 'classmethod'
+
+1 METHOD:
+     Compiles an instance method for the class whose name you give as a 
+     parameter.  The class of the new method will automatically become the 
+     "current" class.  If you don't supply a class name, the new method is 
+     compiled for the current class (as set with the SET CLASS:, FILEOUT 
+     CLASS:, METHOD:, or LIST CATEGORIESIN: command).
+
+     Text of the method should follow the METHOD: command on subsequent
+     lines.  The method text is terminated by the first line that starts 
+     with the '%' character.  For example:
+
+         METHOD: Employee
+         name
+            ^ name
+         %
+
+1 OBJECT
+     Provides structural access to GemStone objects.  You can use the OBJECT 
+     command to "peek" and "poke" at objects without sending messages.
+
+     The first parameter to this command must be a valid object 
+     specification.  Following that, you may supply a sequence of 
+     AT: and AT:PUT: commands.
+
+2 AT:
+     The AT: command takes an integer offset into the given object and
+     retrieves the instance variable at that offset.  For example,
+
+        Object Tool at: 1
+
+     fetches and displays the first instance variable of the GemStone
+     object named "Tool".
+
+     When an indexable object also has named instance variables, the
+     indexable instance variables FOLLOW the named instance variables. 
+     That is, if an indexable object also had three named instance variables, 
+     the first indexable field would be addressed with 
+
+        Object anIndexableObj at: 4
+
+     You may use AT: with NSCs (instances of Bag and its subclasses).
+
+2 AT:PUT:
+     The AT:PUT: command lets you store values into instance variables.
+     This command takes an integer offset and a second object specification,
+     and stores the second object into the first object at the given offset.
+
+     You may not use AT:PUT: with NSC objects.
+
+                                  WARNING
+        Because OBJECT AT:PUT: bypasses all the protections built into
+        the GemStone Smalltalk kernel class protocol, you risk corrupting your 
+        database if you permanently modify objects with this command. 
+
+3 Examples
+
+     Object '12345' at: 3 put: $x
+
+        creates the string "12345", puts the character "x" at its 
+        third position, and displays the modified string.
+
+     Object Tool at: 1  at: 4 put: Widget  at: 5 put: ToolBox
+
+        (1) finds the object contained in Tool's first instance variable;
+        (2) stores the object named Widget at that object's 4th location;
+        (3) stores the object named ToolBox at that object's 5th location;
+        (4) displays the modified object.
+
+3 Byte_Array_Objects
+
+     OBJECT AT:PUT: behaves differently for objects with byte-array
+     and pointer-array implementations.  You may store the following 
+     kinds of objects into byte-array type objects:
+
+       Character       
+         obj '123' at: 1 put: $9      stores the character '9'
+
+       SmallInteger   
+         obj '123' at: 1 put: 48      stores a byte with value 48
+
+       Byte Arrays  
+         obj '1234' at: 2 put: 'bc'   stores 'b' and 'c' at offsets 2 and 3
+
+1 OBJ1
+     OBJ1 X 
+   is equivalent to 
+     level 1
+     omit zerobased
+     OBJECT X
+     level <previous level>
+     <display zerobased  <if previously set>>
+     
+1 OBJ2 
+     OBJ1 X 
+   is equivalent to 
+     level 2
+     omit zerobased
+     OBJECT X
+     level <previous level>
+     <display zerobased  <if previously set>>
+
+1 OBJ1Z
+     OBJ1Z X
+   is equivalent to
+     level 1
+     display zerobased
+     OBJECT X
+     level <previous level>
+     <omit zerobased  <if not previously set>>
+    
+1 OBJ2Z
+     OBJ1Z X
+   is equivalent to
+     level 2
+     display zerobased
+     OBJECT X
+     level <previous level>
+     <omit zerobased  <if not previously set>>
+
+
+1 Object_Specification_Formats
+
+  The following are legal <objIdentitySpec>
+    @<integer>     an unsigned 64-bit decimal OOP value
+    <integer>      a signed 61-bit literal SmallInteger object
+    $<character>   a literal Character object
+    text           the GemStone object with the specified name (either
+                   a Smalltalk variable name or a local variable created
+                   with the DEFINE command)
+    **             the OOP of the result of the last execution
+    ^              the current class
+
+  The following are legal <literalObjectSpec>
+    'text'         a literal String object
+    #text          a literal Symbol object (no white space allowed)
+    #'t e x t'     a quoted literal Symbol
+    <float>        a Float object (a C double-precision floating point number)
+
+  The following are legal <selectorSpec> . There is no enforcement in
+  the command parsing of the quoted form being a valid method name.
+    text
+    'text'         a literal String object
+    #text          a literal Symbol object (no white space allowed)
+    #'t e x t'     a quoted literal Symbol
+  The resulting token becomes String object and is later converted
+  to a Symbol if required by the command.
+  
+
+  For the purpose of most topaz commands we have the production:
+    <objSpec> := <objIdentitySpec> | <literalObjectSpec>
+
+  For the purpose of the commands EXPECTVALUE, EXPECTERROR and EXPECTBUG
+  we have the following productions:
+
+  The following are legal <objInstanceOfSpec>
+    %text         specifies any instance of the class with symbolic name
+                  "text" 
+
+    /text         specifies any kind of the class with symbolic name "text" .
+                   GciIsKindOf(<result>, <class with symbolic name "text">)
+                  is used to determine is-kind-of .
+    
+    %@<integer>   specifies any instance of the class with OOP <integer>
+
+    /@<integer>   specifies any kind of the class with OOP <integer>
+
+    <resultSpec> := <objSpec> | <objInstanceOfSpec>
+
+
+1 OMIT
+     The DISPLAY and OMIT commands control the display of instance variable 
+     names, hexadecimal byte values, and OOPs (object-oriented pointers).
+     The OMIT command turns off these display attributes, and the DISPLAY
+     command turns them on.  
+
+2 BYTES
+     After you issue the OMIT BYTES command, the display for each string 
+     object will NOT include the hexadecimal value of each byte.
+     (This is the default condition.)
+
+2 CLASSOOPS 
+
+     If DISPLAY OOPS is set, then a subsequent OMIT CLASSOOPS will cause
+     only names Classes and not the oops of classes to be printed in object.
+     OMIT CLASSOOPS has no effect unless DISPLAY OOPS is set .
+
+2 LINEEDITOR
+     Disables use of the built-in line editor . Not available on Windows .
+
+2 NAMES
+     Controls the display of instance variable names.  Normally, the name
+     of each instance variable is displayed along with its value.  When
+     you OMIT NAMES, only the values are displayed;  instance variable
+     names appear as 'i1', 'i2', 'i3', etc.  You can use DISPLAY NAMES 
+     to turn the display back on.
+
+2 OOPS
+     After you issue the OMIT OOPS command, OOP values will NOT 
+     be displayed with database results.  (This is the default condition.)
+
+2 PUSHONLY
+     Disables the effect of the 'ONLY' keyword in an OUTPUT PUSH command.
+
+2 ZEROBASED
+     Show offsets of instVars one-based , canceling any previous
+     DISPLAY ZEROBASED .
+
+2 RESULTCHECK
+     Disables automatic error and result checking.  (See DISPLAY RESULTCHECK for
+     details.)
+
+2 ERRORCHECK
+     same as  omit RESULTCHECK 
+
+2 PAUSEONERROR
+
+     Disables pause-on-error (see DISPLAY PAUSEONERROR for details)
+
+2 FLUSHOUTPUT
+
+     Disables immediate flushing of topaz output files 
+     (see DISPLAY FLUSHOUTPUT for details).
+
+1 OUTPUT
+     Controls where Topaz output is sent.  Normally Topaz sends output 
+     to stdout (standard output).  This command will redirect all Topaz
+     output to a file (or device) of your choice.
+
+2 PUSH
+     Tells Topaz to send output to the file following the PUSH token.
+     (The keyword PUSH must be typed in full.)
+
+     Topaz can maintain a stack of up to 20 output files.  Current 
+     interactions are captured in the file on top of the stack.  If you 
+     attempt to exceed the stack limit, Topaz will display an error 
+     message and continue to send its output to the current output stream.
+
+     If the word following OUTPUT on the topaz command is none of
+       PUSH, POP, PUSHNEW, or APPEND
+     then PUSH is assumed, i.e.
+        OUTPUT foo.out
+     and
+        OUTPUT PUSH foo.out
+     are equivalent. (this paragraph added for gss64 to document
+     previously existing behavior).
+
+3 fileName
+     If you use a host environment name such as $HOME/foo.bar in UNIX
+     in the filename, Topaz will expand that name to the full filename.  
+ 
+     If your filename does not contain an explicit path specification, Topaz
+     writes to the named file in the directory in which you started Topaz.
+
+     If you name a file that doesn't yet exist, Topaz will create it.  
+     In UNIX, if you name an existing file, Topaz will overwrite the file.
+
+     If you name a file that is already being written to by a previous
+     OUTPUT PUSH command, the file will be opened for writing again, 
+     and the resulting file may be garbled.
+
+     To append to an existing file, precede the filename with an ampersand (&):
+         output push &disney$log$files:flubber.log
+     If your operating system allows ampersands in filenames, Topaz
+     may misinterpret any filename with an ampersand as its first character.
+
+3 ONLY
+     Tells Topaz to echo output only to the named file, and not to echo
+     output to standard output (usually, your screen).  (Ordinarily, all
+     output is also echoed on the screen.)   For example:
+     
+                OUTPUT PUSH filename ONLY
+
+2 APPEND
+
+     Tells Topaz to send output to the file following the APPEND token.
+     (The keyword APPEND must be typed in full.)
+
+3 fileName
+     If you use a host environment name such as $HOME/foo.bar in UNIX
+     in the filename, Topaz will expand that name to the full filename.
+
+     If your filename does not contain an explicit path specification, Topaz
+     appends to the named file in the directory in which you started Topaz.
+
+     If you name a file that doesn't yet exist, Topaz will create it.
+
+     If the first character of the file name is ampersand (&), the & character
+     is ignored.
+
+
+3 ONLY
+
+     Tells Topaz to echo output only to the named file, and not to echo
+     output to standard output (usually, your screen).  (Ordinarily, all
+     output is also echoed on the screen.)   For example:
+    
+                OUTPUT APPEND filename ONLY
+
+2 PUSHNEW
+
+     Tells Topaz to send output to the file following the PUSHNEW token. 
+     The OUTPUT PUSHNEW command will create a new version of the file, 
+     if the specified file already exists.
+     For a filename of the form foo.out , the new version will be foo_N.out
+     where N is some integer >= 1 and <= 99 such that foo_N.out did
+     not previously exist . If all 100 versions of the file exist,
+     then OUTPUT PUSHNEW will attempt to overwrite the version with the oldest
+     modification time; if that oldest files is not writable, the
+     OUTPUT PUSHNEW will fail with an error.
+
+3 fileName
+     If you use a host environment name such as $HOME/foo.bar in UNIX
+     in the filename, Topaz will expand that name to the full filename.
+
+     If you name a file that doesn't yet exist, Topaz will create it.
+
+     If the first character of the file name is ampersand (&), the & character
+     is ignored.
+
+3 ONLY
+     Tells Topaz to echo output only to the named file, and not to echo
+     output to standard output (usually, your screen).  (Ordinarily, all
+     output is also echoed on the screen.)   For example:
+    
+                OUTPUT PUSHNEW filename ONLY
+
+
+2 POP
+     Stops output to the current output file (that is, the file most
+     recently named in an OUTPUT PUSH , OUTPUT , or OUTPUT PUSHNEW command).  
+     Topaz closes that file and resumes sending output to the previously 
+     named output file.  
+     If there is no previous output file, an error message is issued 
+     and Topaz once again sends its output to standard output only.
+
+     Although you can abbreviate most other Topaz commands and
+     parameter names, the keyword POP must be typed in full.
+
+1 PAUSEFORDEBUG
+
+     PAUSEFORDEBUG [errorNumber]
+
+     Provided to assist internal debugging of a session
+     With no argument, this is equivalent to REMARK
+
+     The C function void TpPauseForDebug(void), which has no effect, 
+     is called once.  You can set a C debugger breakpoint on TpPauseForDebug
+     if desired.
+
+     After calling TpPauseForDebug,
+       errorNumber > 0  :  the topaz -l or gem process of the session
+         should halt and wait for a C debugger to attach (or dump core)
+         on the next ocurrence of that GemStone error in the current session,
+         and any sessions created by subsequent logins .
+         The halt is at the point in the gem code where the error is generated.
+       errorNumber = 0 :  clear the gem halt-on-error number in current session,
+	  if any, and use halt-on-error == 0 in subsequent logins.
+       errorNumber < 0  : has no effect.
+
+     See also TOPAZPAUSEFORDEBUG
+
+1 PKGLOOKUP
+   PKGLOOKUP meth <selectorSpec> 
+   PKGLOOKUP method <selectorSpec> 
+   PKGLOOKUP cmeth <selectorSpec> 
+   PKGLOOKUP classmethod <selectorSpec> 
+
+     The first argument after 'PKGLOOKUP' is case sensitive.
+     Using the current class, search in environment 0 for 
+     specified instance or class method method going up the class hierarchy.  
+     Print the class in which method found, and list the category and 
+     source code. 
+
+     Looks in GsPackagePolicy state, then peristent method dicts for each class
+     up the hierarchy.  Does not look at transient method dicts.
+     See <selectorSpec> in Object_Specification_Formats
+
+   PKGLOOKUP classname >> selectorSpec
+
+     Make the specified class the current class,
+     and do the specified lookup for a instance method
+
+   PKGLOOKUP classname class >> selectorSpec
+
+     Make the specified class the current class,
+     and do the specified lookup for a class method
+
+
+1 PRINTIT
+
+     Sends the text following the PRINTIT command to GemStone for execution as
+     GemStone Smalltalk code and displays the result.  
+
+     (If there is an error in your code, Topaz will display an error message
+     instead of a legitimate result.)
+
+     Smalltalk text is terminated by the first line in which '%' is the first
+     character.  For example:
+
+        printit
+        { 2 . 3 }
+        %
+        an Array
+          #1 2
+          #2 3
+
+  The result is displayed as if LEVEL 1 were the last LEVEL command,
+  but without altering the display level used by other commands.
+
+  If GEM_NATIVE_CODE_ENABLED=FALSE in the gem config file, or if
+  any breakpoints are set, execution defaults to interpreted mode,
+  otherwise execution defaults to using native code .
+
+1 PROTECTMETHODS
+
+     All subsequent method compilations during the current session 
+     must contain either a <protected> or <unprotected> directive.
+     Used for consistency checking in filein scripts.
+
+1 UNPROTECTMETHODS
+
+     Cancels the effect of PROTECTMETHODS .
+
+1 RELEASEALL 
+
+     Empty topaz's internal buffer of object identifiers which
+     need to be released via GciRelease calls .  RELEASEALL
+     is performed automatically prior to each RUN, DOIT, PRINIT,
+     or SEND .
+
+1 REMARK
+     Begins a remark (comment) line.  Topaz will ignore all 
+     succeeding characters on the line.  You can also use an 
+     exclamation point ("!") in column 1 of a line to signal 
+     the beginning of a comment.  Comments are often useful 
+     in annotating Topaz test scripts and the like. 
+
+1 REMOVEALLMETHODS
+     Removes all methods from the class whose name you give as a parameter.
+     The specified class will automatically become the "current" class.
+
+     Example:    removeallmethods Array
+
+     This command may not be abbreviated.
+
+1 REMOVEALLCLASSMETHODS
+     Removes all class methods from the class whose name you give as 
+     a parameter.
+     The specified class will automatically become the "current" class.
+
+     Example:    removeallclassmethods Array
+
+     This command may not be abbreviated.
+
+1 RUBYHIERARCHY
+
+  same as HIERARCHY, but includes Ruby virtual classes in the report string
+  and default environment == 1 .
+
+1 RUBYIMPLEMENTORS <aSelector>
+
+  Searches environment 1 transient and persistent
+  method dictionaries and prints a list of classes which contain
+  implementations of the ruby selector prefix of aSelector .
+  aSelector may be a string or symbol.
+
+1 RUBYLIST
+
+  same as LIST, but uses environmentId 1 to lookup methods if method
+  not obtained from stack frame, and also includes the
+  SELPREFIXES, CSELPREFIXES subcommands .
+  See subcommands for LIST for all other supported commands
+
+2 CSELPREFIXES
+  list the sorted prefixes of the env 1 selectors of classmethods
+  may be abbreviated as CSELPRE
+
+2 SELPREFIXES
+  list the sorted prefixes of the env 1 selectors of instance methods.
+  may be abbreviated as SELPRE
+
+1 RUBYLOOKUP
+     RUBYLOOKUP meth <selectorSpec>  [envIdInteger]
+     RUBYLOOKUP method <selectorSpec>  [envIdInteger]
+     RUBYLOOKUP cmeth <selectorSpec>  [envIdInteger]
+     RUBYLOOKUP classmethod <selectorSpec>  [envIdInteger]
+
+  Like LOOKUP but uses environmentId 1 by default to lookup methods.
+  looks in transient method dicts, then peristent method dicts for each class
+  up the hierarchy.   If a bridge method is found, and the bridge method
+  has a nonBridgeSelector in it's debug information, then the
+  nonBridge method is also displayed.
+  See <selectorSpec> in Object_Specification_Formats
+
+1 RUBYMETHOD [ environmentId ]
+
+  Takes one optional arg, an integer environmentId . 
+  Default compilation environment is 1 if the environmentId not specified.
+  Compilation will be in specified environment, or env 1, overriding any previous
+  SET COMPILE_ENV: .
+  Followed by method source code terminated by % in column 1, as for METHOD:.
+  Smalltalk source code is compiled using Smalltalk Syntax, 
+  with Ruby semantics for branches like ifTrue:, and with
+  #'equalQ:' translating to identity compare special bytecode instead of  #==  .
+
+1 RUBYCLASSMETHOD [ environmentId ]
+ 
+  same as RUBYMETHOD: but compiles a class method .
+
+1 RUBYRUN
+
+  Same as RUN, but always uses environment 1, overriding any previous
+  SET COMPILE_ENV: .
+  Followed by source code terminated by % in column 1, as for RUN .
+  Smalltalk source code is compiled using Smalltalk Syntax, 
+  with Ruby semantics for branches like ifTrue:, and with
+  #'equalQ:' translating to identity compare special bytecode instead of  #==  .
+
+1 RUN
+  Same as PRINTIT, but the display level for the result is determined
+  by the last  LEVEL command .
+  If GEM_NATIVE_CODE_ENABLED=FALSE in the gem config file, or if
+  any breakpoints are set, execution defaults to interpreted mode,
+  otherwise execution defaults to using native code .
+
+1 RUNENV
+
+     Same as RUN, but takes one integer argument >= 0 and <= 255 ,
+     specifying compilation environment for the code to execute in.
+     Argument takes precedence over the value set by   SET COMPILE_ENV: .
+
+     Example:
+       runenv 6
+       (3.0 + 4.5) myFormatting
+       %
+
+    If GEM_NATIVE_CODE_ENABLED=FALSE in the gem config file, or if
+    any breakpoints are set, execution defaults to interpreted mode,
+    otherwise execution defaults to using native code .
+
+1 INSPECT <object>
+    First parameter must be an object specification . 
+    If  (Globals at:#RubySystemExit otherwise: nil)  is not nil
+    equivalent to
+        SENDENV 1 <object> inspect  
+    else equivalent to 
+        SEND <object> describe  
+
+1 INTERP
+
+  Same as RUN, but do the execution in intepreted mode always.
+  RUN defaults to using native code, unless GEM_NATIVE_CODE_ENABLED=FALSE,
+  or unless any breakpoints are set .
+
+1 INTERPENV
+
+  Same as RUNENV, but do the execution in intepreted mode always.
+
+1 NBRUN
+
+     Similar to PRINTIT. If current session is remote,
+     execution is non-blocking, using GciNbExecute().
+     To get the result , always use NBRESULT which calls GciNbEnd() .
+     The text of NBRUN is not accessible from EDIT LAST.
+     NBRUN should not be immediately preceeded by EXPECT commands , since
+     NBRUN has no result.  NBRUN may be followed by a SET SESSION and
+     another NBRUN to start a non-blocking execution in another session .
+
+1 NBSTEP
+
+     Similar to STEP. If current session is remote, 
+     execution is non-blocking, using GciNbStep().
+     To get the result , always use NBRESULT which calls GciNbEnd() .
+     NBSTEP should not be immediately preceeded by EXPECT commands , since
+     NBSTEP has no result.  NBSTEP may be followed by a SET SESSION and
+     another NBRUN or NBSTEP to start an execution in another session .
+
+1 NBRESULT
+
+     Wait for and display result of a previous NBRUN, by calling GciNbEnd().
+     May be preceeded by a SET SESSION to switch to the session 
+     of an outstanding NBRUN, otherwise the topaz current session is used.
+     May be immediately preceeded by EXPECTVALUE , EXPECTBUG, etc,
+     provided that the EXPECT commands contain only ints or numerically
+     coded objIds (i.e. @NNN ) , to avoid having the EXPECT commands 
+     execute GciResolveSymbol before the call to GciNbEnd() .
+     If the NBRUN has compilation errors, those will be displayed by
+     the NBRESULT.  If there is no outstanding NBRUN for the session
+     the result is  "[84 sz:0 cls: 597 UndefinedObject] _remoteNil"
+ 
+
+1 SEND
+     Sends a message to an object.  The message is built almost as it 
+     would be in Smalltalk, by mixing the keywords and arguments.  The
+     first argument is an object specification identifying a receiver.
+     For example: 
+
+         SEND System myUserProfile
+         Send 1 + 2
+         send @10443 deleteEntry: @33234
+
+     Only one message send can be performed at a time with SEND.
+     Cascaded messages or parenthetical messages are not supported 
+     by this command.  Also note that each item should be delimited by 
+     one or more spaces or tabs.  A maximum of 20 keyword/argument pairs
+     is allowed on the SEND command.
+
+  If GEM_NATIVE_CODE_ENABLED=FALSE in the gem config file, or if
+  any breakpoints are set, execution defaults to interpreted mode,
+  otherwise execution defaults to using native code .
+
+1 SENDENV
+     Sends a message to an object.
+     The first argument is an integer in the range 0..255 specifying 
+     environmentId for the initial message send,
+     and takes precedence over the value set by   SET COMPILE_ENV: .
+     Remaining arguments are same as for SEND , for example:
+        SENDENV 5 System myUserProfile
+
+     See also  SEND,  SET COMPILE_ENV:  .
+
+  If GEM_NATIVE_CODE_ENABLED=FALSE in the gem config file, or if
+  any breakpoints are set, execution defaults to interpreted mode,
+  otherwise execution defaults to using native code .
+
+1 SENDERS <selectorSpec>
+
+    Expects one argument, an objectSpecification, the value of which
+    is either a String or Symbol . 
+
+    Equivalent to a DOIT of
+      ClassOrganizer new sendersOfReport: aString 
+    which reports senders of (aString asSymbol) for environment 0.
+    May require larger than default GEM_TEMPOBJ_CACHE_SIZE configuration.
+    See <selectorSpec> in Object_Specification_Formats
+
+1 SUBCLASSES
+
+      SUBCLASSES 
+        prints subclasses of the current class 
+        using environment 0
+
+      SUBCLASSES <className> 
+        prints subclasses of the specified class
+        default environment == 0
+
+      The result is obtained from  Class>>hierarchy .
+      Ruby virtual classes are not shown in the report.
+
+1 SET
+     The SET command is used (in conjunction with LIST and EDIT) to browse
+     through GemStone dictionaries, classes, and methods.  You can use SET
+     to select a current CLASS and CATEGORY.
+
+     You also use this command to SET certain login parameters: GEMSTONE (the 
+     Stone process), your GemStone USERNAME and PASSWORD, your host 
+     HOSTUSERNAME and HOSTPASSWORD, and GEMNETID (name of GemStone 
+     service).  (You can also set these parameters in a Topaz initialization
+     file.)
+
+     The special idioms,
+        "SET HOSTUSERNAME *"
+        "SET PASSWORD *"
+        "SET HOSTPASSWORD *"
+
+     will clear the respective fields.
+
+     You can combine two or more SET items on a Topaz command line, and you 
+     can abbreviate token names (so long as they remain unique).  For example:
+
+             SET GEMSTONE multiuser USER DataCurator
+
+2 CACHENAME
+     Sets the name of the session in the shared page cache.  The cache name
+     is the name that appears in VSD for the process.  Use this command to
+     set the cache name before issuing the login command.  
+
+     This command is only effective for linked sessions and has no effect for
+     RPC sessions.
+     
+     To set the cache name to be "MySession":
+              SET CACHENAME MySession
+
+2 CATEGORY:
+     Sets the "current category" for subsequent method compilations.  
+     For example: 
+
+       set category: Accessing
+
+     To include spaces in a category name, enclose the category name
+     in single quotes:
+
+       set cat 'Public Methods'
+
+     If you compile a method without first selecting a category, 
+     the new method is inserted in the default category "as yet unspecified".
+
+     If the category you name doesn't already exist, Topaz will create
+     it the first time you compile a method. 
+
+     Specifying a new class with SET CLASS clears the current category.
+     When you EDIT or FILEOUT a method, that method's category becomes
+     the current category. 
+
+     Before you can SET CATEGORY, you must be logged in to GemStone.
+     The current category is cleared by the LOGOUT, LOGIN, SET CLASS,
+     and SET SESSION commands.  
+
+2 CLASS:
+     Sets the current class.  After you issue SET CLASS, you can list 
+     the class's categories and methods with the LIST CATEGORIES command.
+     You can select a category to work with through either the SET CATEGORY:
+     or the CATEGORY: command.
+     
+     The current class may also be redefined by the LIST CATEGORIESIN:,
+     METHOD:, CLASSMETHOD:, and FILEOUT CLASS: commands.  The current 
+     class is cleared by the ABORT, LOGOUT, LOGIN, and SET SESSION 
+     commands.  
+
+     Before you can SET CLASS, you must be logged in to GemStone.
+     Example
+       set class Integer
+   
+     "SET CLASS" with no subsequent class name 
+      will display the name of the current class. 
+
+2 COMPILE_ENV:
+
+     Sets the compilation environmentId for method compilations and
+     for executions (RUN, DOIT, etc).  Argument must be an integer >= 0
+     and <= 255 .  The default is zero .
+
+2 EDITORNAME:
+     Sets the name of the editor you want to use in conjunction
+     with the EDIT command.  The default is set from the value of your
+     $EDITOR environment variable, if it is defined.
+
+2 GEMNETID:
+     Establishes the name of the GemStone service on the host computer 
+     (that is, the host process to which Topaz will be connected).  
+     The default name is "gemnetobject".  If this doesn't work for you,
+     see your GemStone data curator.
+
+     You can specify the Gem network node as part of the GEMNETID argument.
+     Topaz will examine that argument for information about the desired Gem
+     node.
+
+     You can tell Topaz to find the GemStone service and run your GemStone 
+     session on a node other than the local node by using a command of the
+     form:
+
+          set gemnetid: !@node!aServiceName
+
+     If you are using linked Topaz, GEMNETID is not used.
+
+2 GEMSTONE:
+     Specifies the name of the GemStone database that you want to log in to.
+     Example:
+
+          SET GemStone: GemServer
+
+     You can run your Gem (GemStone session), Stone (database monitor),
+     and Topaz processes on separate nodes in your network.  Ordinarily,
+     your GemStone session will look for the Stone process whose name 
+     you supply on the same node on which the GemStone session is running.
+     You can tell Topaz to find the Stone process on a different node by
+     using a command of the form:
+
+          SET GEMSTONE: !@theNode!theGemStoneName
+
+2 HISTORY:
+     Expects an integer argument in range 1 .. 1000 .
+     Sets the history size of the line editor.
+        example SET HISTORY 50
+     Not available on Windows.
+
+
+2 HOSTPASSWORD:
+     Sets the host password to be used when you next log in.  If you 
+     don't include the password on the command line, Topaz will prompt 
+     you for it.  Prompted input will be taken from the terminal and 
+     not echoed.  This allows you to put a SET HOSTPASSWORD: command in 
+     your Topaz initialization file so that Topaz will automatically prompt 
+     you for your host password.
+
+     This command must follow the SET HOSTUSERNAME: command.
+
+     The command "SET HOSTPASSWORD *" will clear the host password.
+
+     If you are using linked Topaz, SET HOSTPASSWORD has no effect.  
+
+2 INCONVERSION
+
+     For use only by repository upgrade scripts in $GEMSTONE/upgrade .
+     Sets  the interal variable GciSupDbInConversion to TRUE .
+
+3 TCP_Network_Initialization
+     With TCP/IP, if you don't explicitly supply a host username and password,
+     Topaz will try to find a username for the designated node in a file in 
+     your home directory.  Under UNIX, that file is $HOME/.netrc and 
+     should contain lines of the form
+               MACHINE aNode LOGIN aUsername PASSWORD aPassword 
+
+     For example:
+       machine alf login joe password mypassword    ($HOME/.netrc -- UNIX)
+
+     Because the network initialization file contains your password, make
+     sure that others (group or world) do not have authorization to read it.
+
+2 HOSTUSERNAME:
+     Sets the account name that you use to log in to the host computer.
+     When you run Topaz, a Gem (GemStone session) process is started 
+     on the host computer specified by the SET GEMNETID command.  The 
+     SET HOSTUSERNAME command tells Topaz which account you want that 
+     process to run under.
+     
+     If you don't use the SET HOSTUSERNAME and SET HOSTPASSWORD commands
+     to supply the needed account information, and no default account 
+     information exists for you, you will be unable to log in.
+     
+     If you're using linked Topaz (gemnetid "gcilnkobj"), SET HOSTUSERNAME has
+     no effect.
+
+     Because SET HOSTUSERNAME: clears your host password, you should 
+     issue this command before issuing SET HOSTPASSWORD:.
+
+3 TCP_Network_Initialization
+     With TCP/IP, if you don't explicitly supply a host username and password,
+     Topaz will try to find a username for the designated node in a file in 
+     your home directory.  Under UNIX, that file is $HOME/.netrc and 
+     should contain lines of the form
+               MACHINE aNode LOGIN aUsername PASSWORD aPassword 
+
+
+     For example:
+       machine alf login joe password mypassword    ($HOME/.netrc -- UNIX)
+
+     Because the network initialization file contains your password, make
+     sure that others (group or world) do not have authorization to read it.
+
+2 LISTWINDOW
+
+   Controls the number of source lines listed by the LISTW command
+
+2 NRSDEFAULTS:
+
+     Sets the default components to be used in network resource string
+     specifications. The parameter is a network resource string header
+     that may specify any NRS modifiers' default values. The initial
+     value of NRSDEFAULTS is the value of the GEMSTONE_NRS_ALL environment
+     variable.  The STATUS command shows the value of NRSDEFAULTS
+     unless it is the empty string.
+
+2 PASSWORD:
+     Specifies the GemStone password to be used in subsequent LOGIN
+     commands.  If you don't include the password on the command line, 
+     Topaz will prompt you for it.  (Your input will not be echoed.)
+
+     You can put a SET PASSWORD: command in your Topaz initialization file
+     so that Topaz will automatically prompt you for your password. 
+
+     This command must follow the SET USERNAME: command.
+
+     The command "SET PASSWORD *" will clear the host password.
+
+
+2 SESSION:
+     Connects Topaz to the session whose ID you supply as a parameter.  When
+     you log in to GemStone, Topaz displays the session ID number for that
+     connection.  You can use SET SESSION: to switch among multiple sessions.
+     (The Topaz prompt always shows the number of the current session.)
+     
+     If you specify an invalid session number, an error message
+     will be displayed, and the current session will be retained.
+     
+     This command clears the current class and category.  After you
+     switch sessions with SET SESSION:, your local variables (created with 
+     DEFINE) no longer have valid definitions.
+     
+     If you're using linked Topaz, you may not use SET SESSION.
+
+2 SOURCESTRINGCLASS
+
+     Sets the class used to instantiate Smalltalk source strings 
+     generated by RUN, EDIT, METHOD, and CLASSMETHOD commands.
+     Examples
+
+       set sourcestringclass String
+       set sourcestringclass DoubleByteString
+       set sourcestringclass IsoLatin
+
+     The default source class is String.  The current source class is shown
+     by the status command.  A  SET SESSION command will reset the
+     source string class to the default.
+
+2 STACKPAD
+     Sets a minimum size used formatting stack display lines.  The
+     (implementation class ,selector) portion of each frame's line
+     in output for WHERE is padded to this size. min value 0, max 256 .
+     Default STACKPAD value is 45 .
+
+2 TAB
+     Set number of spaces to which to tranlate a tab (ctrl-I) character
+     when printing method source strings.  Default is 8 .
+     Expects one arg, an integer  >= 1 and <= 16 .
+     Example
+        set tab 2 
+
+2 USERNAME:
+     Establishes the GemStone user ID to use for your next LOGIN
+     command.  (Your GemStone data curator can tell you your user name.)
+     Because SET USERNAME: clears your GemStone password, you should 
+     issue this command before issuing SET PASSWORD:.
+
+1 SHELL
+     When issued with no parameters, SHELL spawns a child process,
+     leaving you at the operating system prompt.  To get back into
+     Topaz, type Ctrl-D (from the UNIX Bourne shell) or LOGOUT (from VMS
+     or from the UNIX C shell).
+
+     If you supply parameters on the SHELL command line, they are passed 
+     to a subprocess as a command for execution.  
+     For example:
+
+        topaz 1> SHELL ls -l /user1/newtoni.topaz
+
+1 SPAWN
+
+     Same as SHELL
+
+     When issued with no parameters, SPAWN spawns a child process,
+     leaving you at the operating system prompt.  To get back into
+     Topaz, type Ctrl-D (from the UNIX Bourne shell) or LOGOUT (from VMS
+     or from the UNIX C shell).
+
+     If you supply parameters on the SPAWN command line, they are passed 
+     to a subprocess as a command for execution.  
+     For example:
+
+        topaz 1> SPAWN ls -l /user1/newtoni.topaz
+
+1 STACK
+     Legacy command for displaying stack of a Smalltalk process.
+     See also WHERE.
+
+     Topaz can maintain up to 500 simultaneous GemStone Smalltalk processes
+     that provide information about the GemStone state of execution.
+     Each processes call stack is made up of frames representing
+     method or block activations.
+
+     When you type "STACK", Topaz displays all frames in
+     the current call stack, starting with the current frame.
+     ("STACK 1" displays only the current frame;
+     "STACK 2" displays the current frame and its caller.)
+
+     For each frame, the display includes the receiver's
+     class, the class of the CompiledMethod, the method selector, the level
+     number (as used in STACK SCOPE), the current step point within the method
+     (an integer, as in LIST STEPS), parameters and temporaries for this 
+     frame.
+
+     The resulting display is governed by the setting of other Topaz commands 
+     such as LIMIT, LEVEL, and DISPLAY or OMIT.
+
+2 ALL
+     STACK ALL displays your list of saved call stacks.  The list includes 
+       the top frame of every call stack ("STACK 1"):
+            *0  Lion (Object) | doesNotUnderstand: @ 9
+             1  Lion (Animal) | habitat @ 3
+             2  Executed Code
+       The "*" indicates the current call stack, if one exists.  
+       If there are no saved stacks, a message to that effect is displayed.
+
+     STACK ALL is superceded by THREADS 
+
+2 CHANGE
+
+     STACK CHANGE anInt
+       Sets the current call stack to the call stack indicated by "anInt" in
+       the STACK ALL display, and displays one frame of the newly 
+       selected call stack.
+
+     equivalent to THREAD anInt
+
+2 DELETE
+
+     STACK DELETE anInt
+       Removes the call stack indicated by "anInt" in the STACK ALL display.
+       equivalent to THREAD anInt CLEAR
+
+     STACK DELETE ALL removes all call stacks.
+
+
+2 NOSAVE 
+
+     STACK NOSAVE causes your current call stack to be deleted before 
+       executing any of the following commands:  PRINTIT, SEND, DOIT,
+       RUN, EDIT LAST, or EDIT NEW TEXT.  This is the default condition.
+
+     See also STACK SAVE .
+
+2 SAVE
+
+     STACK SAVE causes your current call stack to be saved before executing 
+       any of the commands listed for STACK NOSAVE.
+
+
+2 SCOPE 
+
+     STACK SCOPE 
+       Displays the current frame within the current stack.
+
+     STACK SCOPE <anInteger>
+       Sets the frame at the specified position within
+       the current stack to be the current frame within that stack,
+       and displays that frame.
+
+     STACK SCOPE 1
+       Sets the frame at the *top* of the current stack to be the
+       current frame.  A subsequent STACK command will then display
+       the complete stack.  This is the default current frame of
+       a stack that has not been previously accessed with STACK SCOPE <n> .
+
+     STACK 
+       Display the current stack from the current scope to the *bottom*
+       of the stack.  After an error during execution, the default 
+       current scope of a stack is the top of that stack.
+
+
+2 UP
+
+     Move the current scope one up the stack (towards top of stack),
+     and displays the current scope within the current stack.
+
+     equivalent to STACK SCOPE <current scope + 1>
+
+2 DOWN
+
+     Move the current scope one down the stack (away from top of stack),
+     and displays the current scope within the current stack.
+
+     equivalent to STACK SCOPE <current scope - 1>
+
+2 TRIM
+
+     Trim the stack so that the current scope becomes the new top of stack,
+     and that exection will resume at the first instruction in the method
+     at new top of stack.  The new top of stack must not represent the
+     frame of an ExecutableBlock.
+     If the method at new top of stack has been recompiled, installs the
+     new version of that method at the top of the stack.  
+     See documentation of the methods GsProcess>>_trimStackToLevel: ,
+     GsProcess>>_localTrimStackToLevel:  for details.
+     If the stack is trimmed , any resumption of execution will
+     be in interpreted mode.
+
+1 STACKWAITFORDEBUG
+
+     Displays the current call stack,
+     Then waits for a debugger to attach as defined for TOPAZWAITFORDEBUG.
+     STACKWAITFORDEBUG takes no arguments.
+
+1 STK 
+
+     Similar to STACK except that parameters and temporaries for each
+     frame are not displayed, thus STK produces one line of output
+     per stack frame.   STK with no arguments  will always display the
+     full stack, prefixing the current scope (as set by last STACK SCOPE, 
+     STACK UP, or STACK DOWN)  with '==>'  .
+
+1 STATUS
+     Displays your current login settings and other information about
+     your Topaz session.
+
+1 STEP
+     Advances execution to the next "step point" (assignment, message send,
+     or method return) and halts.  You can use the STEP command to continue
+     execution of your GemStone Smalltalk code after an error or breakpoint 
+     has been encountered.  For examples and other useful information, see the
+     discussion of debugging in Chapter 2 of the Topaz manual.
+
+     STEP OVER
+         Advances execution to the next step point in the current frame
+         or its caller.  "Current frame " is defined as
+         the frame by the last STACK SCOPE, STACK UP,
+         or STACK DOWN command, or is the top of stack of no 
+         STACK {SCOPE|UP|DOWN} has been issued for the current stack.
+
+     STEP INTO
+         Advances execution to the next step point in your GemStone Smalltalk 
+         code.
+
+     STEP
+         Equivalent to STEP OVER
+
+     When the next step point is hit, topaz prints a message about the
+     kind of step point hit, and a one line description of the top of the
+     stack.
+
+1 STRINGS <selectorSpec>
+
+    Expects one argument, an selectorSpec, the value of which
+    may be a String or Symbol.
+
+    Equivalent to a DOIT of
+       ClassOrganizer new strings: aString
+    which reports environment 0 methods containing aString 
+    in their source string  .
+
+    May require larger than default GEM_TEMPOBJ_CACHE_SIZE configuration.
+    Cannot be abbreviated.
+    See <selectorSpec> in Object_Specification_Formats
+
+1 STRINGSIC <selectorSpec>
+
+    Expects one argument, an objectSpecification, the value of which
+    may be a String or Symbol.
+
+    Equivalent to a DOIT of
+       ClassOrganizer new stringsIc: aString
+
+    May require larger than default GEM_TEMPOBJ_CACHE_SIZE configuration.
+    Cannot be abbreviated.
+    See <selectorSpec> in Object_Specification_Formats
+
+1 SUBCLASSES 
+
+1 TEMPORARY
+     Displays or redefines the value of one or more temporaries 
+     in the current frame of the current stack .
+
+     TEMPORARY Displays the names and values of all temporaries in the 
+       current frame.
+
+     TEMPORARY preferences
+       Displays the temporary named "preferences" in the current frame
+
+     TEMPORARY preferences 'bouzouki'
+       Redefines the value of the temporary named 
+       "preferences" in the current frame to have the value
+       'bouzouki'.  The new value (here, 'bouzouki') may be any Topaz object
+       specification.
+
+     TEMPORARY 3
+       Displays the temporary at offset 3 in the current frame.
+       Use this form to access a temporary with a duplicate name, since 
+       the displaying a temporary by name will always display the first
+       temporary with the given name.
+
+     TEMPORARY 3  'abc'
+       Modifies the temporary at offset 3 in the current frame.
+
+
+1 THREAD
+
+  May be abbreviated as THR .
+  THREAD     displays currently selected GsProcess  from among the stack
+  saved from the last error, or those retrieved by last THREADS command.
+
+  THREAD <n>  changes the currently selected GsProcess.  Valid <n> are
+  those shown in the most recent THREADS command .
+
+  THREAD <n> CLEAR clears the selected GsProcess from topaz stack cache.
+
+
+1 THREADS
+
+  With no parameters,
+  forces any dirty instances of GsProcess in cached in VM stack memory 
+  to be flushed to object memory.  Then executes a message send of
+     ProcessorScheduler>>topazAllProcesses
+  and retrieves and displays the list of GsProcesses .
+  The resulting list will also include any GsProcesses which have
+  been saved via STACK SAVE commands.
+  Cannot be abbreviated.  
+
+  THREADS  CLEAR 
+    clears the topaz cache of GsProcess's
+
+
+1 TIME
+     The first execution of TIME during the life of a topaz process displays
+        current date and time from the operating system clock,
+        total CPU time used by the topaz process.
+     Subsequent execution of TIME will display in addition
+        elapsed time since the previous TIME command,
+        CPU time used by the topaz process since the previous TIME command.
+
+1 TOPAZPAUSEFORDEBUG
+
+    TOPAZPAUSEFORDEBUG [errorNumber]
+    Provided to assist internal debugging of a session
+
+    The C function void TpPauseForDebug(void), which has no effect,
+    is called once.  You can set a C debugger breakpoint on TpPauseForDebug.
+
+    After calling TpPauseForDebug,
+      errorNumber > 0  : topaz should halt and wait for a C debugger
+        to attach (or dump core)
+        on the next ocurrence of that GemStone error , after the error
+        has been returned to topaz via a topaz call to GciErr() .
+        The halt is in the topaz code after the error is returned.
+       errorNumber = 0 :  clear the topaz halt-on-error number 
+       errorNumber < 0  : has no effect.
+
+   See also PAUSEFORDEBUG
+
+1 TOPAZWAITFORDEBUG
+
+    TOPAZWAITFORDEBUG
+
+    Waits forever in a sleep loop until a C debugger (dbx or gdb)
+    is attached to continue execution.  You will need to have tpaux.c
+    be debuggable in order to be able to use the C debugger to
+    change the loop control variable and have topaz execution continue .
+    See the source code for implementation of cmdTpWaitForDebug 
+    in tpaux.c .
+
+
+1 QUIT [<status>]
+     Terminates Topaz, returning to the parent process or operating system.
+     If you are still logged in to GemStone when you type QUIT, this will   
+     abort your transaction and log out all active sessions.  
+     Although you can abbreviate most other Topaz commands and
+     parameter names, QUIT must be typed in full.
+
+     If this command has a <status> argument and it is an integer, then
+     the integer is used as the exitStatus.  If the status argument is an 
+     object specification that resolves to an integer, then that value 
+     is used as the exitStatus.  Only 8 bits of the integer are returned,
+     exitStatus should be 0..255.  If it is not an integer then an error 
+     is returned and the process does not exit.
+     
+     If the command does not have a <status> argument, the exitStatus will 
+     be either 1 if there were GCI errors or the topaz errorcount is not zero, 
+     or 0 if no errors had occurred.
+
+     QUIT has the same function as EXIT.
+
+     To exit from topaz help back to topaz command prompt, type <Enter>.
+
+1 UP [<anInteger>]
+
+    UP -- In the current stack, change the current frame
+    to be the caller of the current frame, and display the 
+    frame thus selected.  
+
+    UP <anInteger> -- Go up anInteger frames , make that the
+    current frame, and display the frame thus selected.      
+
+1 UPR [<anInteger>]
+    Like UP, but looks at Ruby frames only.
+
+    UPR -- Go up to next frame in currently selected stack which
+     for a non-bridge method in environment 1.  
+
+    UPR <anInteger> -- Go up stack counting specfied number of frames
+    in environment 1, and skipping other frames,  and display
+    the frame thus selected.      
+
+1 UPRB [<anInteger>]
+    same as UPR but counts/displays both bridge and non-bridge methods
+
+1 WHRUBY  <same options as WHERE>
+
+  Same as WHERE but shows Ruby frames only.
+  Specifically, displays only those stack frames which are 
+  executing in non-bridge methods in environment 1.
+
+  May be abbreviated as WHR
+
+1 WHRB <same options as WHERE>
+
+   same as WHRUBY but displays both bridge and non-bridge methods
+
+1 WHERE <various options>
+    Display frames of the current stack.
+    Abbreviations W, WH will resolve to WHERE rather than WHRUBY
+    See also THREADS, THREAD .
+
+    WHERE             
+      Display entire current stack, one line per frame.
+ 
+    WHERE <anInteger> 
+    WHERE +<anInteger>
+       Display anInteger frames of the current stack,
+       starting at the current frame, one line per frame.
+
+    WHERE -<anInteger> 
+       display anInteger+1 frames ending with current frame
+
+    WHERE +-<anInteger> 
+       display anInteger frames before current frame, current frame,
+      and (anInteger-1) frames after current line
+
+    WHERE +- 
+       same as WHERE +-5
+    WHERE -
+       same as WHERE -5
+    WHERE +
+       same as WHERE 5
+
+    WHERE aString
+       aString is a string not beginning with any of 
+         decimal digit, whitespace,  or any of the 3 characters ' + -   
+       and not containing whitespace.
+       Searches all frames, and displays only those for which output of WHERE
+       for that frame matches case-sensitive search for aString anywhere 
+       in that frame's output(not including the frame number or ==> marker 
+       at start of frames's line).  Current frame is set to first frame 
+       matched by the search.
+
+    WHERE 'bString'
+       same as  for    WHERE aString    but bString may contain digits and
+       whitespace characters.
+
+1 Overview
+  Topaz is a command-driven interface to the GemStone data management
+  system.  It provides commands for browsing classes, creating, debugging, 
+  and executing GemStone Smalltalk code, and inspecting and modifying GemStone 
+  objects. 
+  
+  All commands except ABORT, COMMIT, EXIT, LOGOUT, and QUIT (and the
+  OUTPUT keywords PUSH and POP) may be abbreviated as much as you wish.
+  When an abbreviation matches more than one Topaz command, Topaz will list
+  every command that the abbreviation matches.  You may then reenter
+  the command with enough characters to remove ambiguity. 
+  
+  You can stop a command at any time by typing CTRL-C.  Topaz may
+  take a moment or two before halting the current operation.  
+
+  Topaz command lines are limited to 511 characters.
+
+1 Blanks
+     Topaz ignores any white space at the beginning of a line
+     or between parameters.  However, it is good practice to 
+     use white space to separate parameters.  Do not use
+     colons, commas, and other non-alphanumeric characters 
+     separate keywords and parameters.  For example: 
+     
+        object anObject at: 5 put: 6         <--- valid
+
+        object anObject at:5 put: 6          <--- NOT valid
+
+1 Break_Handling_in_Topaz
+
+      If you type Ctrl-C while Topaz is waiting for input,
+      Topaz will automatically abort the current command.
+      If you type Ctrl-C while Topaz is NOT waiting for input, 
+      and you are logged in to GemStone, Topaz will send a soft-break 
+      request to GemStone.  A second Ctrl-C typed before GemStone can
+      respond to the soft-break will cause a hard-break to be sent
+      to GemStone .
+
+      A hard break during the following Repository methods will kill 
+      the session, otherwise the hard-break terminates GemStone Smalltalk 
+      execution.
+        markForCollection,  fullBackupTo:,  restoreFromBackup 
+        objectAudit, auditWithLimit:, repairWithLimit:
+        pagesWithPercentFree, 
+      
+      If you type Ctrl-C three times before Topaz is able to redisplay
+      its prompt, Topaz will attempt to exit immediately.
+      If you are running topaz -l  ($GEMSTONE/bin/topazl), and are logged
+      in using a linkable session, then topaz will wait for shared memory 
+      data structures to reach a safe state before exiting.
+
+1 Debugging_Smalltalk_Code
+    Topaz can maintain up to 500 simultaneous GemStone Smalltalk call 
+    stacks that provide information about the GemStone state of execution.
+    Each call stack is made up of frames which represent
+    method or block activations.
+
+    Topaz provides debugging commands that enable you to:
+     o  Step through execution of a method.
+     o  Inspect/change the values of arguments, temporaries, and receivers.
+     o  Set, clear, and examine GemStone Smalltalk breakpoints.  
+
+    For the purpose of determining exactly where a "step" will go during
+    debugging, a GemStone Smalltalk method can be decomposed into "step points".
+    The locations of step points also determine where interpreter breakpoints 
+    can be set.  Generally, step points correspond to message sends, 
+    method returns and assignments.  
+
+2 Debugging_Commands
+   Here's a quick overview of Topaz debugging commands.  For more
+   information, see the top-level help for the desired command.
+
+   Stacks
+     WHERE -- display current stack one line per frame  ('==>' shows current frame),
+		will accept arguments to display just part of the stack.
+     FRAME -- print currently selected frame, and the receiver, args and temps
+     FRAME <n> -- goto specified frame and print with receiver, args and temps
+     UP    -- go to caller of current frame and print with receiver, args and temps
+     DOWN  -- go go callee of current frame and print with receiver, args and temps
+
+     STACK NOSAVE [default] --- the current call stack will be automatically
+       terminated via a GciClearStack by the next of
+       any of these commands: DOIT, PRINTIT, RUN, SEND, EDIT LAST, EDIT NEW TEXT.
+     STACK SAVE -- protect the current call stack from termination 
+     STACK DELETE -- terminate a specific call stack.
+
+     THREADS - list the saved stacks, plus those known to the ProcessorScheduler
+     THREAD <N> - make the specified stack the current stack, where N
+		specifies an element of the list shown by THREADS
+
+   Breakpoints
+     BREAK METHOD -- halt execution at a step point within a method.
+     BREAK MESSAGE -- halt execution before a selector is sent to an 
+       instance of a chosen class.  
+     BREAK DELETE -- delete a breakpoint.
+     BREAK LIST -- list all currently set breakpoints.
+     LIST BREAKS -- display all breakpoints currently set in a method.
+     LIST STEPS -- list the source code of a method and display all step
+       points (allowable breakpoints) in that source code.
+
+   Step Through a Method
+     CONTINUE execution after a breakpoint is encountered.
+     STEP through a method after a breakpoint is encountered.
+
+   Temporaries
+     TEMPORARY -- examine or modify the values of temporaries.
+
+   Legacy commands
+     STACK -- display all frames in the current call stack, with
+       receiver, args and temps printed for each frame
+     STK --   same as WHERE
+     STACK SCOPE -- print the current frame within the current stack
+     STACK ALL -- replaced by THREADS
+     STACK CHANGE -- select a different call stack to be "current",
+		replaced by THREAD <N>
+
+1 Initialization
+
+     Before you can log in to GemStone (via the LOGIN command), you
+     need to establish values for network and other parameters.
+     You can create a Topaz initialization file that contains SET
+     commands which establish the required parameter values.  
+     In this way, you can define parameter values once -- in the
+     initialization file -- so that you won't need to explicitly provide
+     those values each time you log in.
+
+     When you start Topaz, it looks for this initialization file. 
+
+          In UNIX, the file is named .topazini
+
+     If the initialization file is present, Topaz files it in.  
+     
+2 Required_Parameters
+     The following values must be established -- either interactively or
+     in your Topaz initialization file -- before you can log in to GemStone:
+                
+        SET HOSTUSERNAME:   Your user account on the host computer
+        SET HOSTPASSWORD:   Your password on the host computer
+        SET GEMNETID:       Name of the GemStone service on the host computer
+                               (defaults to gemnetobject)
+        SET GEMSTONE:       Name of the Stone (database monitor) process
+        SET USERNAME:       Your GemStone user ID 
+
+     (With linked Topaz, only the last two values are required.)
+
+     For more information, see the Help information for the SET command
+     or Chapter 1 of your Topaz manual.
+     
+1 Local_Variables
+     Topaz allows you to define local variables.  These variables associate
+     local names with database objects so that you can keep track of the
+     results of database messages without memorizing OOP values.  The DEFINE
+     command is used to create, display, and delete local definitions.  
+
+     You can use local variables in the OBJECT, SEND, and other commands.
+     When you do, your local definition overrides any object with 
+     the same name in the database.
+      
+     Local symbols may be up to 255 characters in length, must begin with 
+     a letter (a-z) or an underscore, and may not contain white space.
+
+     Topaz automatically creates several definitions for you.  You 
+     can examine these definitions and use them in most Topaz commands,
+     but you can't change them with the DEFINE command.  For more 
+     information, select the Help subtopic "Local_Definitions".
+
+2 Local_Definitions
+
+        myUserProfile     the OOP of your GemStone UserProfile object
+
+        ErrorProcess      the OOP of the last GemStone Smalltalk execution 
+	                  error process; used in the CONTINUE command.
+
+        LastText          the OOP of the last text compiled for execution 
+                          with a PRINTIT, DOIT, METHOD: or CLASSMETHOD:
+                          command.
+
+        LastResult        the OOP of the result of the last PRINTIT, DOIT, 
+                          SEND or CONTINUE command.   nil if the last such
+                          command generated an error.
+
+        CurrentClass      the OOP of the current class (set by the last 
+                          command taking a class name as a parameter).
+
+        CurrentCategory   the OOP of the current method category.
+
+        ErrorCount        the number of errors encountered during this
+                          invocation of the topaz executable.
+   
+2 Examples 
+      DEFINE var1 **      saves the last result in local variable "var1".
+
+      DEFINE var2 var1 entryAt: 4
+        sends "entryAt:" to the object named "var1" (in this case
+        a local variable defined on the previous line) and saves the
+        result in the local variable "var2".
+      
+      DEFINE var3 1.444 * 47e32
+        sends "*" to the float object "1.444" with arg "47e32" 
+        and saves the result in the local variable "var3".
+      
+      DEFINE              displays all current local variable definitions.
+      
+      DEFINE var3         removes the definition of "var3".
+
+1 Linked_vs_RPC
+
+      Two versions of Topaz are available to you: linked and "remote
+      procedure call" (RPC).  You can use linked Topaz to significantly
+      enhance performance.  In linked Topaz, your Topaz session and Gem
+      (the GemStone session) exist as a single process.  To invoke
+      linked Topaz, you use the operating system command "topaz -l" in
+      place of "topaz".
+
+      Topaz can only be linked with a single GemStone session
+      process. If you issue the login command to create multiple sessions,
+      the new sessions are RPC sessions rather than linked.
+
+1 Multiple_Sessions
+
+     Topaz can keep several independent GemStone sessions alive 
+     simultaneously, allowing you to switch from one session to another
+     with the SET SESSION command. 
+
+2 Example
+
+     In this example, a user creates a second session, makes the new
+     session his current session, then returns to the original session.
+
+        topaz 1> login
+        GemStone password? <password typed here but not echoed>
+        topaz 2> run
+        userglobals at: #myVar put: 1
+        %
+        1
+        topaz 2> set session 1 
+        topaz 1>
+
+1 Network_Resource_String
+
+      A network resource string (NRS) provides a means for uniquely
+      identifying a GemStone file or process by specifying its location on
+      the network, its type, and authorization information. GemStone
+      utilities use network resource strings to request services from a
+      NetLDI.
+
+      For example:
+          
+         topaz 1> set gemstone !tcp@oboe!testserver
+        
+      Refer to your Topaz user manual for a detailed description of
+      NRS syntax.
+
+1 Specifying_Objects
+    Certain commands (such as OBJECT and SEND) require you to specify GemStone
+    objects that you want to work with.  Here are some ways to do this:
+      
+    @<integer>     a signed 32-bit decimal OOP value
+    <integer>      a 31-bit literal SmallInteger object
+    <float>        a Float object (a C double-precision floating point number)
+    $<character>   a literal Character object
+    'text'         a literal String object
+    text           the GemStone object with the specified name (either
+                   a Smalltalk variable name or a local variable created 
+                   with the DEFINE command)
+    #text          a literal Symbol object (no white space allowed)
+    **             the OOP of the result of the last execution
+    ^              the current class
+
+2 Example
+    Here is an example of how you might use object specification formats:
+      
+      topaz> display OOPS
+      topaz> level 0
+      topaz> !  First, send the message "entries" to the object named 'OFS'
+      topaz> send OFS entries
+  RESULT --> [11324 sz: 1 cls: 261] an Array
+      topaz> !  Now send "at:" to that Array, with one arg: the SmallInteger 1
+      topaz> send @11324 at: 1
+  RESULT --> [11325 sz: 5 cls: 10324] an OfsDirEntry
+      topaz> !  Save the result (an OfsDirEntry) in the local var. "result"
+      topaz> define result **
+      topaz> !  Send "instVarAt:put:" to that OfsDirEntry, with 2 args:
+      topaz> !     the SmallInteger 3 and the String 'this is a test'
+      topaz> send result instVarAt: 3 put: 'this is a test'
+ 
+1 StringArguments
+     A command parameter in Topaz is any sequence of non-white
+     characters, or any sequence of quoted characters.  Only
+     single quote marks (') are recognized by Topaz.  To include quote
+     marks within a quoted parameter, double the internal quotes:
+        
+          'don''t do as I do, do as I say'
+
+     Commands which expect a method selector as an argument will 
+     accept quoted or non-quoted strings with or without a # prefix,
+     such as
+          at:put:
+          #at:put:
+          'at:put:'
+          #'at:put: 
+
+         

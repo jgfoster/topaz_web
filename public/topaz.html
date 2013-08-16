@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<!-- Copyright (c) 2011-2013 GemTalk Systems LLC. All Rights Reserved. -->
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
+		<meta http-equiv='Content-Script-Type' content='application/javascript'/>
+		<title>Topaz</title>
+		<link href='/topaz.css' rel='stylesheet' type='text/css' />
+		<script src='/topaz.js' type='text/javascript'></script>
+	</head>
+	<body onload="onload()">
+		<div class='output' id='output'></div>
+		<form class='command' action='#' method='post' onsubmit='submitCommand(); return false;'>
+			<fieldset>
+				<input type='text' class='command' id='input'></input>
+				<input type='button' class='update' value='Update' onclick="get('update'); return false;" />
+				<input type='button' class='stack'  value='Stack'  onclick="get('stack');  return false;" />
+				<input type='button' class='break'  value='Break'  onclick="get('break');  return false;" />
+				<input type='submit' class='submit' />
+			</fieldset>
+		</form>
+	</body>
+</html>

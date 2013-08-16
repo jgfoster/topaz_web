@@ -1,0 +1,15 @@
+
+div.output { font-family: monospace; overflow-y: scroll; margin: 1em; 
+	bottom: 0; position: absolute; width: 97%; max-height: 98%; }
+.command { color: DarkSlateGray; font-weight: bold; }
+.error { color: Red; }
+pre { margin: 0; }
+
+fieldset { border: 0; margin: 0; padding: 0; }
+
+form.command  { position: absolute; left: 0; bottom: 0.4em; right: 2em; }
+input.command { position: absolute; left: 5.5em; right: 20em; }
+input.update  { float: right; }
+input.stack   { float: right; }
+input.break   { float: right; }
+input.submit  { float: right; }
